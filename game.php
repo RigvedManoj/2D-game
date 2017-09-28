@@ -1,0 +1,354 @@
+
+<html>
+	<head>
+	</head>
+  <style>
+	#p1{
+		position: fixed;
+		font-size: 60px;
+		font-weight: bolder;
+		color: #0000FF;
+		top:-30px;
+		left:1250px;
+	}
+  body, canvas, html{margin:0;padding:0;border:0 none;}
+  canvas{display: block;}
+}
+</style>
+	<body>
+  <div id="body">
+		</div>
+		<p id="p1"></p>
+	</audio>
+	<audio id="au1">
+	<source src="tune.mp3" type="audio/mp3">
+	</audio>
+    <script type="text/javascript" src="http://code.jquery.com/jquery.min.js"></script>
+		<script>
+		var aq='0',zx='-1';
+		   var randomx,randomy;
+			 var timing;
+			 var continu=1;
+			   var sound= document.getElementById("au1");
+			 var count=0,x1=60,x2=0;
+		    var i=0,j=50,x=700,y=300,count=0;
+        var maze,brk=0,mazecount=0;
+			var canvas = null;
+			var context = null;
+			var assets = ['robowalk00.png','robowalk01.png','robowalk02.png','robowalk03.png','robowalk04.png',
+						  'robowalk05.png','robowalk06.png','robowalk07.png','robowalk08.png','robowalk09.png',
+						  'robowalk10.png','robowalk11.png','robowalk12.png','robowalk13.png','robowalk15.png',
+						  'robowalk16.png','robowalk17.png','robowalk18.png'];
+			var frames = [],array = [];
+			var frameCount = 0,  currentFrame =0, framerate = 1000/30, go;
+			var right=0,down=0;
+			var kl=0,countdown=60;
+			function timer()
+			{
+					countdown--;
+					document.getElementById("p1").innerHTML=countdown;
+					if(countdown==0)
+					stop();
+			}
+      var onMazeLoad= function(){
+				sound.load();
+				sound.play();
+				timing=setInterval(timer,1000);
+					for(var i1=-500;i1<=1800;i1+=50)
+					for(var i2=-500;i2<=1200;i2+=50)
+					{context.drawImage(maze,35,0,25,25,i1,i2,50,50);
+	        array.push({x: i1, y: i2,val: "b"});
+			}
+			randomx=(Math.floor((Math.random()*21)-4))*50;
+			if(randomx>=700&&randomx<=1000)
+			randomx+=400;
+			if(randomx<700&&randomx>=400)
+			randomx-=400;
+			randomy=(Math.floor((Math.random()*15)-4))*50;
+			if(randomy>=300&&randomy<=600)
+			randomy+=400;
+			if(randomy<300&&randomy>=0)
+			randomy-=400;
+        while(1){
+					context.drawImage(maze,0,0,30,30,700,300,50,50);
+					mazecount++;
+					for(var i1=0;i1<array.length;i1++)
+	 			 if(array[i1].x==x&&array[i1].y==y)
+	 			 array[i1].val="g";
+				  x2 = Math.floor(Math.random() * 4);
+					if((!(x1==0&&x2==1))&&(!(x1==1&&x2==0))&&(!(x1==2&&x2==3))&&(!(x1==3&&x2==2)))
+					{
+						x1=x2;
+				 if(x1==0&&x<1700)
+				 {
+					 x+=50;
+					 context.drawImage(maze,0,0,30,30,x,y,50,50);
+					 array.push({x: x, y: y,val: "g"});
+				 }
+				 if(x1==1&&x>-400)
+				{
+					x-=50;
+					context.drawImage(maze,0,0,30,30,x,y,50,50);
+					array.push({x: x, y: y,val: "g"});
+				}
+				if(x1==2&&y<1000)
+				{
+					y+=50;
+					context.drawImage(maze,0,0,30,30,x,y,50,50);
+					array.push({x: x, y: y,val: "g"});
+				}
+				if(x1==3&&y>-400)
+				{
+					y-=50;
+					context.drawImage(maze,0,0,30,30,x,y,50,50);
+					array.push({x: x, y: y,val: "g"});
+				}
+					}
+				for(var i1=0;i1<array.length;i1++)
+				{
+					if(array[i1].x==randomx&&array[i1].y==randomy)
+					if(array[i1].val=="g")
+					brk=1;
+				}
+				if(brk==1)
+        {
+					break;
+				}
+		}
+				context.drawImage(maze,70,0,25,25,randomx,randomy,50,50);
+      /*  if(moving=="2")
+        {
+          go=setInterval(animate4,framerate);}*/
+				for(var i1=0;i1<array.length;i1++)
+				if(array[i1].x==randomx&&array[i1].y==randomy)
+				array[i1].val="g";
+				;
+      context.drawImage(frames[0],700,300,50,40);
+		}
+			var onImageLoad = function(){
+				frameCount++;
+			};
+			var setup = function() {
+				body = document.getElementById('body');
+				canvas = document.createElement('canvas');
+				context = canvas.getContext('2d');
+
+				canvas.width = window.innerWidth;
+				canvas.height = window.innerHeight;
+				body.appendChild(canvas);
+                 for(var i=0; i < assets.length; i++){
+					var img = new Image();
+					img.onload = onImageLoad;
+					img.src = assets[i];
+					frames.push(img);
+      }
+       maze= new Image();
+      maze.onload=onMazeLoad;
+      maze.src="terrain1.png";
+			listen();
+    };
+		function listen()
+		{
+			var xhttp;
+		 xhttp = new XMLHttpRequest();
+		 xhttp.onreadystatechange = function() {
+		 if (this.readyState == 4 && this.status == 200) {
+		  aq=this.responseText;
+			if(continu==1)
+			{
+				if(zx==aq)
+				{stop();
+					zx='-1';}
+				else
+				zx=aq;
+				console.log(aq);
+				if(zx!='-1')
+				{
+		 if(aq=='2')
+				 {
+					 clearInterval(go);
+go=setInterval(animate,framerate);}//50
+		 if(aq=='3')
+				 {
+					  clearInterval(go);
+go=setInterval(animate3,framerate);}//35
+		if(aq=='1')
+				 {
+					  clearInterval(go);
+go=setInterval(animate4,framerate);}//48
+			if(aq=='4')
+ {
+	  clearInterval(go);
+go=setInterval(animate2,framerate);}//63
+}
+		 listen();
+	 }
+		 }
+		 };
+		 xhttp.open("GET", "server.php", true);
+		 xhttp.send();
+		}
+			   function stop()
+			   {
+					 if(countdown==0)
+					 {
+						 continu=0;
+						 var xhttp;
+					   xhttp = new XMLHttpRequest();
+					   xhttp.open("GET", "control.php?id=5", true);
+					   xhttp.send();
+						  sound.pause();
+						 clearInterval(go);
+						 clearInterval(timing);
+						 context.clearRect(0,0,canvas.width,canvas.height);
+						 context.font="30px Arial";
+						 context.fillText("YOU LOSE",700,300)
+					 }
+					 else {
+				   clearInterval(go);
+					 console.log("go");
+					 if(randomx-right<=725&&randomx+50-right>=725&&randomy+50-down>=325&&randomy-down<=325)
+			 			{clearInterval(timing);
+							countdown=60;
+							context.font="30px Arial";
+						context.clearRect(0,0,canvas.width,canvas.height);
+						count++;
+						if(count<4)
+						{
+							i=0;j=50;x=700;y=300;
+							right=0;down=0;
+						 kl=0;
+						 array=[];
+						 brk=0;
+						 onMazeLoad();
+						}
+						else {
+							continu=0;
+							var xhttp;
+ 					   xhttp = new XMLHttpRequest();
+ 					   xhttp.open("GET", "control.php?id=5", true);
+ 					   xhttp.send();
+            document.getElementById("p1").innerHTML="";
+						sound.pause();
+			 			context.fillText("YOU WIN",700,300)
+			 			window.onkeydown=null;
+			 			window.onkeyup=null;
+					}
+			 		}
+				}
+			   }
+ function animate()
+ {kl=0;
+	 context.clearRect(0,0,canvas.width,canvas.height);
+	 //console.log(array[0].x)
+ 	for(var i1=0;i1<array.length;i1++)
+ 	 {
+ 		 if(array[i1].x-right<=750&&array[i1].x-right>=740&&array[i1].y-down>=260&&array[i1].y-down<340)
+ 		 {
+ 			 if(array[i1].val=="b")
+ 		 kl=1;
+	 }
+ 			if(array[i1].val=="g")
+ 		context.drawImage(maze,0,0,30,30,array[i1].x-right,array[i1].y-down,50,50);
+ 		else
+		 if(array[i1].val=="b")
+ 		context.drawImage(maze,35,0,25,25,array[i1].x-right,array[i1].y-down,50,50);
+ 	}
+ 	 context.drawImage(maze,70,0,25,25,randomx-right,randomy-down,50,50);
+ 	 context.save();
+  context.translate(700+25,300+20);
+ 	 context.rotate(0);
+ 	 context.drawImage(frames[currentFrame],-25,-20,50,40);
+ currentFrame = (currentFrame == frameCount-1)? 0: currentFrame+1;
+ context.restore();
+ if(kl==0)
+ right+=5;
+ }
+ function animate2()
+ {kl=0;
+	 context.clearRect(0,0,canvas.width,canvas.height);
+	 for(var i1=0;i1<array.length;i1++)
+		{
+			if(array[i1].x-right>=660&&array[i1].x-right<740&&array[i1].y-down<=340&&array[i1].y-down>=330)
+			{
+				if(array[i1].val=="b")
+			kl=1
+		;}
+			 if(array[i1].val=="g")
+		 context.drawImage(maze,0,0,30,30,array[i1].x-right,array[i1].y-down,50,50);
+		 else
+		 context.drawImage(maze,35,0,25,25,array[i1].x-right,array[i1].y-down,50,50);
+	 }
+		context.drawImage(maze,70,0,25,25,randomx-right,randomy-down,50,50);
+		context.save();
+	context.translate(700+25,300+20);
+		context.rotate(Math.PI/2);
+		context.drawImage(frames[currentFrame],-25,-20,50,40);
+ currentFrame = (currentFrame == frameCount-1)? 0: currentFrame+1;
+ context.restore();
+ if(kl==0)
+ down+=5;
+ }
+ function animate3()
+ {kl=0;
+	 context.clearRect(0,0,canvas.width,canvas.height);
+	 for(var i1=0;i1<array.length;i1++)
+		{
+			if(array[i1].x-right>=660&&array[i1].x-right<740&&array[i1].y-down>=250&&array[i1].y-down<=260)
+			{
+				if(array[i1].val=="b")
+			kl=1
+		;}
+			 if(array[i1].val=="g")
+		 context.drawImage(maze,0,0,30,30,array[i1].x-right,array[i1].y-down,50,50);
+		 else
+		 context.drawImage(maze,35,0,25,25,array[i1].x-right,array[i1].y-down,50,50);
+	 }
+		context.drawImage(maze,70,0,25,25,randomx-right,randomy-down,50,50);
+		context.save();
+	context.translate(700+25,300+20);
+		context.rotate(-Math.PI/2);
+		context.drawImage(frames[currentFrame],-25,-20,50,40);
+ currentFrame = (currentFrame == frameCount-1)? 0: currentFrame+1;
+ context.restore();
+ if(kl==0)
+ down-=5;
+ }
+ function animate4()
+ {kl=0;
+	context.clearRect(0,0,canvas.width,canvas.height);
+	 for(var i1=0;i1<array.length;i1++)
+  	 {
+  		 if(array[i1].x-right>=650&&array[i1].x-right<=660&&array[i1].y-down>=260&&array[i1].y-down<340)
+  		 {
+  			 if(array[i1].val=="b")
+  		 kl=1
+			 ;}
+  			if(array[i1].val=="g")
+  		context.drawImage(maze,0,0,30,30,array[i1].x-right,array[i1].y-down,50,50);
+  		else
+  		context.drawImage(maze,35,0,25,25,array[i1].x-right,array[i1].y-down,50,50);
+  	}
+  	 context.drawImage(maze,70,0,25,25,randomx-right,randomy-down,50,50);
+  	 context.save();
+   context.translate(700+25,300+20);
+  	 context.rotate(Math.PI);
+  	 context.drawImage(frames[currentFrame],-25,-20,50,40);
+  currentFrame = (currentFrame == frameCount-1)? 0: currentFrame+1;
+  context.restore();
+ if(kl==0)
+ right-=5;
+}
+window.onbeforeunload = closingCode;
+function closingCode(){
+	continu=0;
+	var xhttp;
+	xhttp = new XMLHttpRequest();
+	xhttp.open("GET", "control.php?id=5", true);
+	xhttp.send();
+   return null;
+}
+ setup();
+		</script>
+	</body>
+</html>
